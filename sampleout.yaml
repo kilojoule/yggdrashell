@@ -1,0 +1,45 @@
+gods:
+    Kilowho:
+        gid: 0
+        sphere: Persons
+        player: Kilojoule Proton
+        essence: 28
+    Kilowhat:
+        gid: 1
+        sphere: Things
+        player: Kilojoule Proton
+        essence: 23
+    Kilohow:
+        gid: 2
+        sphere: Locations, Mechanisms
+        player: Demonic Spoon
+        essence: 40
+races:
+    Protons:
+        rid: 0
+        pop: 9.568
+        price: Divine
+        layer: peak
+        location: center
+        tech: Medieval
+        worships: 
+            Kilohow: 1.0
+    Electrons:
+        rid: 1
+        pop: 9.568
+        price: Basic
+        layer: 0.5
+        location: coastline, desert
+        tech: Bronze Age
+        worships: 
+            Kilohow: 0.2
+            Kilowhat: 1.0
+    Neutrons:
+        rid: 2
+        pop: [9.568, 5.6160000000000005]
+        price: Divine
+        layer: peak
+        location: center
+        tech: Medieval
+        worships: 
+            Kilowho: 0.9
