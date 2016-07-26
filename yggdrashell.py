@@ -23,7 +23,7 @@ except FileNotFoundError:
 		now = time.strftime('%Y-%m-%d %H:%M:%S GMT', time.gmtime())
 		f.write('#Generated ' + now + '\n')
 		f.write("godfields: ['gid', 'sphere', 'player', 'essence']\n")
-		f.write("racefields: ['rid', 'pop', 'price', 'layer', 'location', 'crunch', 'tech', 'ur']")
+		f.write("racefields: ['rid', 'pop', 'price', 'layer', 'location', 'crunch', 'tech', 'url']")
 	f.close()
 	with open('.ygconfig') as f:
 		try:
