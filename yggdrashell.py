@@ -7,6 +7,17 @@ import math
 godfields = ['gid', 'sphere', 'player', 'essence']
 racefields = ['rid', 'pop', 'price', 'layer', 'location', 'crunch', 'tech', 'ur']
 
+#attempt to load .ygconfig
+with open('.ygconfig') as f:
+	try:
+		cfg = yaml.load(f)
+	except yaml.YAMLError as e:
+		print(e)
+		sys.exit(1)
+godfields = cfg['godfields']
+racefields = cfg['racefields']
+
+
 def yg_roll(x): 
 	fpart = x - int(x)
 	if random.random() < fpart: return int(x)+1
