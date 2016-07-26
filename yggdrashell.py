@@ -1,19 +1,33 @@
 #!/usr/bin/env python
 
-import yaml, sys, random, re
+import yaml, sys, random, re, time
 
 import math
 
-godfields = ['gid', 'sphere', 'player', 'essence']
-racefields = ['rid', 'pop', 'price', 'layer', 'location', 'crunch', 'tech', 'ur']
-
 #attempt to load .ygconfig
-with open('.ygconfig') as f:
-	try:
-		cfg = yaml.load(f)
-	except yaml.YAMLError as e:
-		print(e)
-		sys.exit(1)
+try: 
+	with open('.ygconfig') as f:
+		try:
+			cfg = yaml.load(f)
+		except yaml.YAMLError as e:
+			print(e)
+			sys.exit(1)
+except FileNotFoundError:
+	print('Configuration file .ygconfig not found, attempting to create with YG4 entries', file=sys.stderr)
+	with open('.ygconfig', 'w') as f:
+		now = time.strftime('%Y-%m-%d %H:%M:%S GMT', time.gmtime())
+		f.write('#Generated ' + now + '\n')
+		f.write("godfields: ['gid', 'sphere', 'player', 'essence']\n")
+		f.write("racefields: ['rid', 'pop', 'price', 'layer', 'location', 'crunch', 'tech', 'ur']")
+	f.close()
+	with open('.ygconfig') as f:
+		try:
+			cfg = yaml.load(f)
+		except yaml.YAMLError as e:
+			print(e)
+			sys.exit(1)
+	f.close()
+
 godfields = cfg['godfields']
 racefields = cfg['racefields']
 
@@ -24,12 +38,17 @@ def yg_roll(x):
 	else: return int(x)
 
 #open base data
-with open(sys.argv[1]) as stream:
-	try:
-		x = yaml.load(stream)
-	except yaml.YAMLError as e: 
-		print(e)
-		sys.exit(1)
+try:
+	with open(sys.argv[1]) as stream:
+		try:
+			x = yaml.load(stream)
+		except yaml.YAMLError as e: 
+			print(e)
+			sys.exit(1)
+	stream.close()
+except IndexError:
+	print('Usage:', sys.argv[0], 'INPUTFILE', '[OUTPUTFILE]')
+	sys.exit(1)
 
 #open deductions
 
