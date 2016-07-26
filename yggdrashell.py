@@ -4,6 +4,11 @@ import yaml, sys, random, re, time
 
 import math
 
+def yg_roll(x): 
+	fpart = x - int(x)
+	if random.random() < fpart: return int(x)+1
+	else: return int(x)
+
 #attempt to load .ygconfig
 try: 
 	with open('.ygconfig') as f:
@@ -30,12 +35,6 @@ except FileNotFoundError:
 
 godfields = cfg['godfields']
 racefields = cfg['racefields']
-
-
-def yg_roll(x): 
-	fpart = x - int(x)
-	if random.random() < fpart: return int(x)+1
-	else: return int(x)
 
 #open base data
 try:
