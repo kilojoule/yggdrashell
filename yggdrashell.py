@@ -79,10 +79,25 @@ for g in sorted(x['gods'].keys()):
 	names.append(g)
 	gids.append(x['gods'][g]['gid'])
 
+#print
+print('[spoiler=Deities('+str(len(gids))+')]')
 fg = dict(zip(gids, names))
 for i in sorted(fg.keys()):
 	g = x['gods'][fg[i]]
 	print(fg[i],'('+g['sphere']+')',str(g['essence'])+'E')
+print('[/spoiler]')
+
+print()
+
+SIGMA=.01*20*0
+print('[spoiler=Worship-forming units (plus/minus '+str(SIGMA*100)+'%)]')
+for i in sorted(fg.keys()):
+	#g = worships[i]
+	#print(i, worships[i])
+	try: n = worships[fg[i]]
+	except KeyError: n = 0
+	print(fg[i], round(abs(n + random.gauss(0, SIGMA*n))))
+print('[/spoiler]')
 
 #deductions first in the future
 
