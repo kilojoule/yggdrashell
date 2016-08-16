@@ -66,7 +66,8 @@ for r in sorted(x['races'].keys()):
 		if type(p) is list: p = sum(p)
 
 		try: worships[g] += p * x['races'][r]['worships'][g]
-		except KeyError: worships[g] = p
+		except KeyError: worships[g] = p * x['races'][r]['worships'][g]
+		#except KeyError: worships[g] = p * x[
 
 for g in sorted(worships.keys()):
 	w = yg_roll(2*math.log(1+worships[g], 2))
@@ -89,7 +90,7 @@ print('[/spoiler]')
 
 print()
 
-SIGMA=.01*20*0
+SIGMA=.01*20
 print('[spoiler=Worship-forming units (plus/minus '+str(SIGMA*100)+'%)]')
 for i in sorted(fg.keys()):
 	#g = worships[i]
