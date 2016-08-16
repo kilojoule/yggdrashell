@@ -4,6 +4,19 @@ import yaml, sys, random, re, time
 
 import math
 
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("infile", metavar="INFILE", help="data file to read from")
+parser.add_argument("outfile", metavar="OUTFILE", help="data file to write to", nargs="?")
+parser.add_argument("-n", action="store_true", help="dry run/half-Tick (no worship, no population growth, no influence")
+parser.add_argument("-s", metavar="SIGMA", help="percent uncertainty of population values {default:20}", type=float)
+args = parser.parse_args()
+
+SIGMA=.01 * 20
+if type(args.s) is float:
+	SIGMA = 0.01 * args.s
+
 def yg_roll(x): 
 	fpart = x - int(x)
 	if random.random() < fpart: return int(x)+1
@@ -37,29 +50,21 @@ godfields = cfg['godfields']
 racefields = cfg['racefields']
 
 #open base data
-try:
-	with open(sys.argv[1]) as stream:
-		try:
-			x = yaml.load(stream)
-		except yaml.YAMLError as e: 
-			print(e)
-			sys.exit(1)
-	stream.close()
-except IndexError:
-	print('Usage:', sys.argv[0], 'INPUTFILE', '[OUTPUTFILE]')
-	sys.exit(1)
+with open(args.infile) as stream:
+	try:
+		x = yaml.load(stream)
+	except yaml.YAMLError as e: 
+		print(e)
+		sys.exit(1)
+stream.close()
 
 #open deductions
 
 #worship calcs
 worships = {}
 for r in sorted(x['races'].keys()): 
-	#print(r)
-	#print('\tPop:',x['races'][r]['pop'])	
-	#print('\tWorships:',x['races'][r]['worships'])
 
 	for g in sorted(x['races'][r]['worships'].keys()):
-		
 
 		p = x['races'][r]['pop'] 
 
@@ -67,11 +72,11 @@ for r in sorted(x['races'].keys()):
 
 		try: worships[g] += p * x['races'][r]['worships'][g]
 		except KeyError: worships[g] = p * x['races'][r]['worships'][g]
-		#except KeyError: worships[g] = p * x[
 
-for g in sorted(worships.keys()):
-	w = yg_roll(2*math.log(1+worships[g], 2))
-	x['gods'][g]['essence'] += w
+if not args.n:
+	for g in sorted(worships.keys()):
+		w = yg_roll(2*math.log(1+worships[g], 2))
+		x['gods'][g]['essence'] += w
 
 #sort by gid
 names = []
@@ -90,11 +95,8 @@ print('[/spoiler]')
 
 print()
 
-SIGMA=.01*20
 print('[spoiler=Worship-forming units (plus/minus '+str(SIGMA*100)+'%)]')
 for i in sorted(fg.keys()):
-	#g = worships[i]
-	#print(i, worships[i])
 	try: n = worships[fg[i]]
 	except KeyError: n = 0
 	print(fg[i], round(abs(n + random.gauss(0, SIGMA*n))))
@@ -145,7 +147,7 @@ for r in sorted(fr.keys()):
 		s += 3*t + g + ': ' + str(x['races'][fr[r]]['worships'][g]) + '\n'
 
 try:
-	f = open(sys.argv[2], 'w')
+	f = open(args.outfile, 'w')
 	f.write(s.strip())
 	f.close()
-except IndexError: pass
+except TypeError: pass
