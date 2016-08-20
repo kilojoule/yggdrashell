@@ -22,6 +22,9 @@ def yg_roll(x):
 	if random.random() < fpart: return int(x)+1
 	else: return int(x)
 
+def formula(x):
+	return 2*math.log(1 + x, 2)
+
 #attempt to load .ygconfig
 try: 
 	with open('.ygconfig') as f:
@@ -75,8 +78,26 @@ for r in sorted(x['races'].keys()):
 
 if not args.n:
 	for g in sorted(worships.keys()):
-		w = yg_roll(2*math.log(1+worships[g], 2))
+		try: i = x['influence']['to'][g] * x['influence']['pop']
+		except KeyError: i = 0
+		w = yg_roll(2*math.log(1+worships[g]+i, 2))
+		#w = yg_roll(2*math.log(1+worships[g], 2))
 		x['gods'][g]['essence'] += w
+
+#influence
+def deprecatedinfluence():
+	print("pop\tworship\tspent\tinfl\tinflinc\tgod")
+	if not args.n:
+		for g in sorted(x['gods']):
+			inftest = ""
+			try:
+				w = worships[g]
+			except KeyError:
+				w = 0
+			try: i = x['influence']['worships'][g]
+			except KeyError: i = 0
+			def infi(inf, wor): return 1000*inf/(wor**4 + 0.001)
+			print(round(w), "\t", round(formula(w)), "\t", round(i), "\t", round(infi(i, w)), "\t", round(formula(infi(i, w))), "\t", g)
 
 #sort by gid
 names = []
@@ -131,6 +152,14 @@ for g in sorted(fg.keys()):
 	s += t+fg[g]+':\n'
 	for prop in godfields:
 		s += 2*t + prop + ': ' + str(x['gods'][fg[g]][prop]) + '\n'
+
+#save influence
+s += 'influence:\n'
+s += t + 'pop: ' + str(x['influence']['pop']) + '\n'
+s += t + 'to:\n'
+
+for g in sorted(x['influence']['to']):
+	s += 2*t + g + ': ' + str(x['influence']['to'][g]) + '\n'
 
 #save races
 
