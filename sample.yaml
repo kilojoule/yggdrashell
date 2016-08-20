@@ -15,6 +15,14 @@ gods:
         sphere: Locations, Mechanisms
         player: Demonic Spoon
         essence: 31
+influence:
+    #use to scale global influence
+    pop: 4.0
+    #use to scale individual influence
+    to:
+        Kilowho: 20.0
+        Kilowhat: 23.0
+        Kilohow: 9.0
 races:
     Protons:
         rid: 0

@@ -80,8 +80,7 @@ if not args.n:
 	for g in sorted(worships.keys()):
 		try: i = x['influence']['to'][g] * x['influence']['pop']
 		except KeyError: i = 0
-		w = yg_roll(2*math.log(1+worships[g]+i, 2))
-		#w = yg_roll(2*math.log(1+worships[g], 2))
+		w = yg_roll(2*formula(1+worships[g]+i))
 		x['gods'][g]['essence'] += w
 
 #influence
@@ -154,12 +153,13 @@ for g in sorted(fg.keys()):
 		s += 2*t + prop + ': ' + str(x['gods'][fg[g]][prop]) + '\n'
 
 #save influence
-s += 'influence:\n'
-s += t + 'pop: ' + str(x['influence']['pop']) + '\n'
-s += t + 'to:\n'
+if 'influence' in x.keys():
+	s += 'influence:\n'
+	s += t + 'pop: ' + str(x['influence']['pop']) + '\n'
+	s += t + 'to:\n'
 
-for g in sorted(x['influence']['to']):
-	s += 2*t + g + ': ' + str(x['influence']['to'][g]) + '\n'
+	for g in sorted(x['influence']['to']):
+		s += 2*t + g + ': ' + str(x['influence']['to'][g]) + '\n'
 
 #save races
 
