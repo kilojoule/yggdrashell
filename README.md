@@ -54,4 +54,4 @@ e.g.
 
 ADDITIONAL HELP
 
-    Simply 
+    Simply contact Kilojoule Proton via email, Discord, or forum PM.
