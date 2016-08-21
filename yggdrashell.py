@@ -9,6 +9,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("infile", metavar="INFILE", help="data file to read from")
 parser.add_argument("outfile", metavar="OUTFILE", help="data file to write to", nargs="?")
+parser.add_argument("-e", metavar="EXPENSESFILE", help="expenses file to read")
 parser.add_argument("-n", action="store_true", help="dry run/half-Tick (no worship, no population growth, no influence")
 parser.add_argument("-s", metavar="SIGMA", help="percent uncertainty of population values {default:20}", type=float)
 args = parser.parse_args()
@@ -61,7 +62,19 @@ with open(args.infile) as stream:
 		sys.exit(1)
 stream.close()
 
-#open deductions
+#open and perform deductions
+if args.e:
+	fex = open(args.e)
+	for l in fex:
+		if re.match("^\s*#", l): continue
+		if re.match("^\s*$", l): continue
+		record = re.split("\s*:\s*", l.strip())
+		deduction = float(re.findall("^[-0-9]+", record[1])[0])
+		deduction = yg_roll(deduction)
+		try: 
+			x['gods'][record[0]]['essence'] += deduction
+		except KeyError: pass
+	fex.close()
 
 #worship calcs
 worships = {}
