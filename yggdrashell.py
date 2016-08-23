@@ -14,6 +14,8 @@ parser.add_argument("-n", action="store_true", help="dry run/half-Tick (no worsh
 parser.add_argument("-s", metavar="SIGMA", help="percent uncertainty of population values {default:20}", type=float)
 args = parser.parse_args()
 
+DEBUG=1
+
 SIGMA=.01 * 20
 if type(args.s) is float:
 	SIGMA = 0.01 * args.s
@@ -86,14 +88,16 @@ for r in sorted(x['races'].keys()):
 
 		if type(p) is list: p = sum(p)
 
-		try: worships[g] += p * x['races'][r]['worships'][g]
+		try: 
+			worships[g] += p * x['races'][r]['worships'][g]
 		except KeyError: worships[g] = p * x['races'][r]['worships'][g]
 
 if not args.n:
 	for g in sorted(worships.keys()):
 		try: i = x['influence']['to'][g] * x['influence']['pop']
 		except KeyError: i = 0
-		w = yg_roll(2*formula(1+worships[g]+i))
+		w = yg_roll(formula(worships[g]+i))
+		if DEBUG: print("w = %0.2f, i = %0.2f, E/t = %0.2f to %s" % (worships[g], i, formula(worships[g]+i), g))
 		x['gods'][g]['essence'] += w
 
 #influence
@@ -190,6 +194,9 @@ for r in sorted(fr.keys()):
 
 try:
 	f = open(args.outfile, 'w')
+	f.write(s.strip())
+	f.close()
+	f = open('.' + args.outfile + '.bak')
 	f.write(s.strip())
 	f.close()
 except TypeError: pass
