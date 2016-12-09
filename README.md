@@ -8,11 +8,11 @@ GETTING STARTED
 
 1. Make a directory for tickly updated content
 
-    mkdir tickly
+        mkdir tickly
 
 2. Copy sample.yaml into this directory
 
-    cp sample.yaml tickly/
+        cp sample.yaml tickly/
 
 3. Edit it according to your game's content
 
